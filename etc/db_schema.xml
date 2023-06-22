@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="eboostmenu_menu" resource="default" engine="innodb" comment="Mega menu table">
+        <column xsi:type="int" name="menu_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Title"/>
+        <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Menu identifier"/>
+        <column xsi:type="varchar" name="css_class" nullable="true" length="255" comment="CSS Class"/>
+        <column xsi:type="varchar" name="node_css_class" nullable="true" length="255" comment="CSS Class For Node"/>
+        <column xsi:type="boolean" name="is_active" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="menu_id"/>
+        </constraint>
+    </table>
+    <table name="eboostmenu_node" resource="default" engine="innodb" comment="Mega menu node table">
+        <column xsi:type="int" name="node_id" unsigned="true" nullable="false" identity="true" comment="Node ID"/>
+        <column xsi:type="int" name="menu_id" unsigned="true" nullable="false" identity="false" comment="Menu ID"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="255" comment="Node Type"/>
+        <column xsi:type="text" name="content" nullable="true" comment="Node contents"/>
+        <column xsi:type="varchar" name="classes" nullable="true" length="255" comment="CSS class name"/>
+        <column xsi:type="int" name="parent_id" unsigned="true" nullable="true" identity="false" comment="Parent Node ID"/>
+        <column xsi:type="smallint" name="position" unsigned="true" nullable="false" identity="false" default="0" comment="Node position"/>
+        <column xsi:type="smallint" name="level" unsigned="true" nullable="false" identity="false" default="0" comment="Node level"/>
+        <column xsi:type="varchar" name="title" nullable="false" length="255" comment="Title"/>
+        <column xsi:type="boolean" name="target" nullable="true" default="0" comment="Link target"/>
+        <column xsi:type="varchar" name="image" nullable="true" length="255" comment="Image"/>
+        <column xsi:type="varchar" name="image_alt_text" nullable="true" length="255" comment="Image Alt Text"/>
+        <column xsi:type="varchar" name="node_template" nullable="true" length="255" comment="Node Template"/>
+        <column xsi:type="varchar" name="submenu_template" nullable="true" length="255" comment="Submenu Template"/>
+        <column xsi:type="boolean" name="is_active" nullable="false" default="1" comment="Is Active"/>
+        <column xsi:type="smallint" name="selected_item_id" unsigned="true" nullable="true" identity="false" comment="Selected Item Id"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="node_id"/>
+        </constraint>
+        <index referenceId="EBOOSTMENU_NODE_MENU_ID" indexType="btree">
+            <column name="menu_id"/>
+        </index>
+        <constraint xsi:type="foreign" referenceId="EBOOSTMENU_NODE_MENU_ID_EBOOSTMENU_MENU_MENU_ID"
+                table="eboostmenu_node" column="menu_id" referenceTable="eboostmenu_menu"
+                referenceColumn="menu_id" onDelete="CASCADE"/>
+    </table>
+    <table name="eboostmenu_store" resource="default" engine="innodb" comment="Layout Link">
+        <column xsi:type="int" name="menu_id" unsigned="true" nullable="false" identity="false" comment="Menu ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" identity="false" comment="Store ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="menu_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="EBOOSTMENU_STORE_MENU_ID_EBOOSTMENU_MENU_MENU_ID"
+                table="eboostmenu_store" column="menu_id" referenceTable="eboostmenu_menu"
+                referenceColumn="menu_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="EBOOSTMENU_STORE_STORE_ID_STORE_STORE_ID" table="eboostmenu_store" column="store_id"
+                referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="EBOOSTMENU_STORE_MENU_ID" indexType="btree">
+            <column name="menu_id"/>
+        </index>
+    </table>
+</schema>

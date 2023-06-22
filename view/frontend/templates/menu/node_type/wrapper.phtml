@@ -1,0 +1,17 @@
+<?php /** @var \EBoost\Menu\Block\NodeType\Wrapper $block */ ?>
+<?php
+$attributes = [];
+$class = $block->getMenuClass() . ' ';
+$title = $block->getTitle();
+if ($block->getIsViewAllLink()) {
+    $classLink = $class . '__inner-link';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+    if ($block->getId()) {
+        $attributes[] = 'data-menu="menu-' . $block->getId() . '"';
+    }
+}
+$attributes[] = 'class="' . $classLink . '"';
+
+?>
+<div <?= implode(' ', $attributes) ?>><?= $title ?></div>

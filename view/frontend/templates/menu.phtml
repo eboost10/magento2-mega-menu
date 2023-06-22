@@ -1,0 +1,30 @@
+<?php /** @var \EBoost\Menu\Block\Menu $block */ ?>
+<?php if ($block->getMenu()): ?>
+    <?php $menuClass = $block->getMenu()->getCssClass() ?>
+    <?php $withContainer = !(bool)$block->getData('without_container') ?>
+
+    <?php if ($withContainer): ?>
+    <nav class="<?= $menuClass ?>">
+        <ul class="<?= $menuClass ?>__list">
+    <?php endif; ?>
+            <?php foreach ($block->getNodes() as $node): ?>
+                <?php
+                    $childrenLevel = $node->getLevel() + 1;
+                    $children = $block->getNodes($childrenLevel, $node);
+                    $node->setIsParent((bool) $children);
+                    $menuItemClass = $menuClass ? $menuClass . ' ' : '';
+                    $parentClass = $children ? ' ' . $menuItemClass . '__item--parent' : '';
+                    $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                    $itemClasses = $parentClass . $additionalClasses;
+                ?>
+                <li class="<?= $menuItemClass ?>__item <?= $itemClasses ?>">
+                    <?= $block->renderMenuNode($node) ?>
+                    <?= $block->renderSubmenu($children, $node, $childrenLevel) ?>
+                </li>
+            <?php endforeach ?>
+    <?php if ($withContainer): ?>
+        </ul>
+        <div class="<?= $menuClass ?>__mobile-bg"></div>
+    </nav>
+    <?php endif; ?>
+<?php endif; ?>
